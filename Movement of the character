@@ -1,12 +1,17 @@
 class_name player extends CharacterBody2D
 ###ROOT Variables.
+
+### the character looking
 var cardinal_direction : Vector2 = Vector2.DOWN
+
 var movement_speed : float = 100
+###the normal states that the character will have
 var state : String = "idle"
+
 var direction : Vector2 = Vector2.ZERO
 
 @onready var animation_player : AnimationPlayer = $AnimationPlayer
-@onready var sprite : CharacterBody2D = $Player
+@onready var techno : CharacterBody2D = $Player
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -35,6 +40,8 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 	
 func setDirection() -> bool:
+	
+	### vector 2 == the cardinal direction meaning if the cardinal direction == north it will equal y  positive.
 	var new_Dir : Vector2 = cardinal_direction
 	if direction == Vector2.ZERO:
 		return false
@@ -52,7 +59,10 @@ func setDirection() -> bool:
 	return true
 	
 func SetState() -> bool:
+	### if this stament == idle it will show the idle animation and the game will consider you in a idle state but
+	##if you this is not equal idle and == walk then you will change the state to walk.
 	var new_state : String = "idle" if direction == Vector2.ZERO else "walk"
+	
 	if new_state == state:
 		return false
 	state = new_state
@@ -61,10 +71,16 @@ func SetState() -> bool:
 func UpdateAnimation() -> void:
 	animation_player.play(state + "_" + AnimDirection())
 	pass
-func AnimDirection() -> String:
+func AnimDirection():
 	if cardinal_direction == Vector2.DOWN:
 		return "down"
 	elif cardinal_direction == Vector2.UP:
 		return "up"
-	else:
-		return "side"
+	elif cardinal_direction == Vector2.RIGHT:
+		return "side_right"
+	elif cardinal_direction == Vector2.LEFT:
+		return "side_left"
+	elif cardinal_direction == Vector2.ZERO:
+		return "idle" + "_" + AnimDirection()
+	
+	
